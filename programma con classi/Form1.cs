@@ -15,6 +15,7 @@ using InTheHand.Net.Ports;
 using System.Net.Sockets;
 using System.Threading;
 using System.IO;
+using ExtendCSharp;
 
 namespace programma_con_classi
 {
@@ -23,10 +24,13 @@ namespace programma_con_classi
         private Guid service = BluetoothService.SerialPort;
         private BluetoothClient bluetoothClient;
         condivisi dati = new condivisi();
+        List<Thread> ListaThread = new List<Thread>();
+
         public Form1()
         {
             InitializeComponent();
             CheckForIllegalCrossThreadCalls = false;
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -79,10 +83,18 @@ namespace programma_con_classi
                     TcpClient cc = (TcpClient)o;
                     thread t = new thread(cc);
                     t.inserisci();
+
                 }).Start(c);
 
 
             }
+        }
+
+       
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Conn.Close();
         }
 
        

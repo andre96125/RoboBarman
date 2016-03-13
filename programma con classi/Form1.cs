@@ -25,53 +25,29 @@ namespace programma_con_classi
         private BluetoothClient bluetoothClient;
         condivisi dati = new condivisi();
         List<Thread> ListaThread = new List<Thread>();
+        TcpListener Listener;
+        Thread ricerca_connessioni;
 
         public Form1()
         {
             InitializeComponent();
+            Listener = new TcpListener(3334);
             CheckForIllegalCrossThreadCalls = false;
             
         }
 
-        private void button1_Click(object sender, EventArgs e)
+      
+
+        private void button2_Click(object sender, EventArgs e)
         {
-            BluetoothRadio.PrimaryRadio.Mode = RadioMode.Discoverable;
-            BluetoothRadio myRadio = BluetoothRadio.PrimaryRadio;
-            bluetoothClient = new BluetoothClient();
-            Cursor.Current = Cursors.WaitCursor;
-            BluetoothDeviceInfo[] bluetoothDeviceInfo = { };
-            bluetoothDeviceInfo = bluetoothClient.DiscoverDevices();
-            comboBox1.DataSource = bluetoothDeviceInfo;
-            comboBox1.DisplayMember = "DeviceName";
-            comboBox1.ValueMember = "DeviceAddress";
-            comboBox1.Focus();
-            Cursor.Current = Cursors.Default;
-            Thread ricerca_connessioni = new Thread(()=>{
+            ricerca_connessioni = new Thread(()=>{
                 connetti();
             }); 
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            if (comboBox1.SelectedValue != null)
-            {
-                try
-                {
-                    bluetoothClient.Connect(new BluetoothEndPoint((BluetoothAddress)comboBox1.SelectedValue, service));
-                    MessageBox.Show("Connected");
-
-
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
-            }
-        }
-
         private void connetti()
         {
-            TcpListener Listener = new TcpListener(3334);
+            
             Listener.Start();
             while (true)
             {
@@ -82,7 +58,7 @@ namespace programma_con_classi
                 {
                     TcpClient cc = (TcpClient)o;
                     thread t = new thread(cc);
-                    t.inserisci();
+                    t.main();
 
                 }).Start(c);
 
@@ -94,7 +70,14 @@ namespace programma_con_classi
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Conn.Close();
+            Listener.Stop();
+            ricerca_connessioni.Abort();
+            //Conn.Close();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            Listener.Stop();
         }
 
        

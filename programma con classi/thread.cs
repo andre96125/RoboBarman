@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ExtendCSharp;
 using System.Windows.Forms;
+using bluetooth_library;
 
 namespace programma_con_classi
 {
@@ -15,24 +16,31 @@ namespace programma_con_classi
         StreamReader sr;
         StreamWriter sw;
         MySQLext Conn;
+        bluetooth blue;
 
         public thread(TcpClient c)
         {
             sr = new StreamReader(c.GetStream());
             sw = new StreamWriter(c.GetStream());
+            blue=new bluetooth();
 
         } 
-
-        public void inserisci()
+        
+        public void main()
         {
             sw.WriteLine("invia");
             sw.Flush();
             String s = sr.ReadLine();
             condivisi.aggiungi(s);
+            inserimentoDB(null, null);
+            ricercaDB(0, null);
+            blue.invia_bluetooth(null);
+            blue.leggi_bluetooth();
         }
 
         public void inserimentoDB(string nome, string value)
         {
+            
             Conn = new MySQLext("localhost", "test", "root", "");
             string istruzione = "insert into test(" + nome + ") values('" + value + "')";
             Conn.ExecuteQuery(istruzione);
@@ -55,5 +63,7 @@ namespace programma_con_classi
             }
             Conn.Close();
         }
+
+        
     }
 }

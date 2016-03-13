@@ -84,6 +84,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Desktop\PROGETTO\c#\bluetooth library\bluetooth library\bluetooth library.csproj">
+      <Project>{a4c22403-bf98-42b2-9645-5197fc14cec6}</Project>
+      <Name>bluetooth library</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\ExtendCSharp\ExtendCSharp\ExtendCSharp\ExtendCSharp.csproj">
       <Project>{9199318b-0f63-4faf-a0f1-823ef0072eea}</Project>
       <Name>ExtendCSharp</Name>
